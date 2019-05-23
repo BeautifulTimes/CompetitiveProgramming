@@ -2,59 +2,57 @@
 #include <queue> 
 
 using namespace std;
-    queue <int> q; 
-
+typedef pair<int, int> pi; 
 int dp [50001];
 int nums [5001];
 int a;
 int max1 = 1000000001;
-void dfs(int node, int value)
-{
-	if(value > max1)
-		return;	
-	if(dp[node] <= value)
-		return;
-	dp[node] = value;
-	for(int x = 1;x<a;x++)
-	{
-		if(dp[(node+nums[x]) % nums[0]] > value + nums[x])
-		{
-		
-			q.push((node+nums[x]) % nums[0]);
-			q.push(value + nums[x]);
-		}
-	}
-}
+
+
 int main()
 {
+	ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+	priority_queue<pi, vector<pi>, greater<pi> > q; 
+
 	cin >> a;
 	for(int x = 0;x<50001;x++)
 		dp[x] = max1;
-
 	for(int x = 0;x<a;x++)
-		cin >> nums[x];
-	dfs(0,0);
-	q.push(0);
-	q.push(0);
+		scanf("%d",&nums[x]);
+	q.push(pi(0,0));
 	while(q.size() != 0)
 	{
-		int f = q.front();
+	    pair<int, int> t = q.top(); 
 		q.pop();
-		dfs(f,q.front());
-		q.pop();
+		int value = t.first;
+		int node = t.second;
+		if(dp[node] > value)
+		{
+		
+		dp[node] = value;
+		for(int x = 1;x<a;x++)
+		{
+			int temp1 =( node+nums[x]) % nums[0];
+			int temp2 = value + nums[x];
+			if(dp[temp1]>temp2)
+			{
+				q.push(pi(temp2,temp1));
+			}
 		}
+	}
+	}
 	int b;
 	cin >> b;
-
 	for(int x = 0;x<b;x++)
 	{
 		int c;
-		cin >> c;
+		scanf("%d",&c);
 		if(dp[c % nums[0]] <= c)
-			cout << "TAK";
+			puts("TAK");
 		else
-			cout << "NIE";
-		cout << '\n';
+			puts("NIE");
+		
 	}
 	cout << endl;
 	
