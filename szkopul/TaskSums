@@ -11,36 +11,33 @@ int max1 = 1000000001;
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
-cin.tie(NULL);
-	priority_queue<pi, vector<pi>, greater<pi> > q; 
-
+	priority_queue<pair<int,int>,vector<pair<int,int> >,greater<pair<int,int> > > q;
 	cin >> a;
-	for(int x = 0;x<50001;x++)
-		dp[x] = max1;
+	fill(dp, dp + 50001, max1);
+
 	for(int x = 0;x<a;x++)
-		scanf("%d",&nums[x]);
+	scanf("%d",&nums[x]);
 	q.push(pi(0,0));
-	while(q.size() != 0)
+	while(!q.empty())
 	{
 	    pair<int, int> t = q.top(); 
 		q.pop();
 		int value = t.first;
 		int node = t.second;
-		if(dp[node] > value)
+		if(dp[node] >= value)
 		{
-		
-		dp[node] = value;
-		for(int x = 1;x<a;x++)
-		{
-			int temp1 =( node+nums[x]) % nums[0];
-			int temp2 = value + nums[x];
-			if(dp[temp1]>temp2)
+			dp[node] = value;
+			for(int x = 1;x<a;x++)
 			{
-				q.push(pi(temp2,temp1));
+				int temp1 =( node+nums[x]) % nums[0];
+				int temp2 = value + nums[x];
+				if(dp[temp1]>temp2&&  temp2 < max1)
+				{
+					dp[temp1] = temp2;
+					q.push(pi(temp2,temp1));
+				}
 			}
 		}
-	}
 	}
 	int b;
 	cin >> b;
