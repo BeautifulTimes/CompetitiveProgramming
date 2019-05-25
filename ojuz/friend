@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+#include <queue> 
+#include <vector>
+#include <friend.h>
+using namespace std;
+ 
+vector<int> child[100001];
+int cod[6];
+int ho[6];
+int pro[6];
+int dpp[100001][2];
+int conn[100001];
+int dp(int node, bool inc)
+{
+	int temp;
+	if(inc)
+		temp = 1;
+	else
+		temp = 0;
+	if(dpp[node][temp] != -1)
+		return dpp[node][temp];
+ 
+	if(inc == true)
+	{
+		int total = conn[node];
+		for(int x = child[node].size()-1;x>=0;x-=2)
+		{
+			int nn = child[node].at(x-1);
+			int proc = child[node].at(x);
+			if(proc == 1)
+				total += max(dp(nn,true),dp(nn,false));
+			else
+				total += dp(nn,false);
+		}
+		dpp[node][temp] = total;
+	}
+	else
+	{	
+		int current = 0;
+		int include2 = 0;
+		int include1 = 0;
+		for(int x = child[node].size()-1;x>=0;x-=2)
+		{
+			int nn = child[node].at(x-1);
+			int proc = child[node].at(x);
+			if(proc == 0)
+			{
+				int diff = dp(nn,true) - dp(nn,false);
+				if(diff <= 0)
+					current += dp(nn,false);
+				else
+				{
+					if(include1 + diff > include2)
+					{
+						current += include1 + dp(nn,true);
+						current -= include2;
+						include1 = 0;
+						include2 = 0;
+					}
+					else
+					{
+						include1 += diff;
+						current += dp(nn,false);
+					}
+				}					
+			}
+			else
+			{
+				int diff = dp(nn,true) - dp(nn,false);
+				if(diff < 0)
+					current += dp(nn,false);
+				else
+				{
+					current += dp(nn,true);
+					include2 += diff;
+				}
+			}
+		}
+		dpp[node][temp] = current;
+	}
+	return dpp[node][temp];
+	
+}
+ 
+int findSample(int n, int confidence[], int host[], int protocol[])
+{
+	for(int x = 1;x<n;x++)
+	{
+		child[host[x]].push_back(x);
+		child[host[x]].push_back(protocol[x]);
+ 
+	}
+	for(int x = 0;x<100001;x++)
+	{
+		dpp[x][0] = -1;
+		dpp[x][1] = -1;
+	}	
+	for(int x = 0;x<n;x++)
+	{
+		conn[x] = confidence[x];
+	}
+	return max(dp(0,false),dp(0,true));
+}
