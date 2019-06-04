@@ -1,0 +1,150 @@
+// This program uses the observation that if we want to tell if one orb can eat everything else, it is benefitial to have that orb eat everyhting else and that if you eat an orb that can alreday eat every other orb, you can eat every other orb 
+// with the orb that you ate that orb with. Using this and DP, we can calculate the answer fairly quickly in O(n) - O(Nlogn) (Time complexity unknown). I thought fast output would be needed but i was proven wrong.
+
+import java.io.*;
+import java.util.*;
+import java.lang.*;
+import java.awt.*;
+import java.awt.geom.*;
+import java.math.*;
+import java.text.*;
+import java.math.BigInteger.*;
+import java.util.Arrays; 
+
+public class   UltimateOrbs
+{
+  BufferedReader in;
+  StringTokenizer as;
+  long nums[],nums2[][];
+  boolean dp[];
+  int[] nums1[];
+  boolean con = true;
+  int a,b;
+  
+  ArrayList < Integer >  ar = new ArrayList < Integer >();
+  ArrayList < Integer >  fi = new ArrayList < Integer >();
+  Map<Integer,Integer > map = new HashMap<Integer, Integer>();
+  public static void main (String[] args)
+  {
+    new UltimateOrbs  ();
+  }
+  
+  public int GCD(int a, int b) {
+    if (b==0) return a;
+    return GCD(b,a%b);
+  }
+  
+  public int LIS(int arr[])
+  {
+    int n = arr.length;
+    int sun[] = new int [n];
+    int cur = 0;
+    for(int x = 0;x<n;x++)
+    {
+      int temp = Arrays.binarySearch(sun,0,cur,arr[x]);
+      if(temp < 0)
+        temp = -temp -1;
+      sun[temp] = arr[x];
+      if(temp == cur)
+        cur++;
+    }
+    return cur;
+    
+  }
+  
+  public boolean solve(int left, int right, long value)
+  {
+    
+    if(left < 0 && right >= a)
+      return true;
+    if(right < a && dp[left+1])
+      return true;
+    if(left >= 0)
+    {
+      if(value + b  >= nums[left])
+        return solve(left-1,right,value + nums[left]);
+    }
+    if(right < a)
+    {
+      if(value + b >= nums[right])
+        return solve(left,right+1,value+nums[right]);
+    }
+
+    return false;
+   
+    
+  }
+  
+  
+  public UltimateOrbs  ()
+  {
+    try
+    {
+      
+      in = new BufferedReader (new InputStreamReader (System.in));
+       a = nextInt();
+       b = nextInt();
+      nums = new long [a];
+      dp = new boolean [a];
+      for(int x = 0;x<a;x++)
+      {
+        nums[x] = nextInt();
+      }
+      ar = new ArrayList < Integer >();
+      for(int x = 0;x<a;x++)
+      {
+        if(solve(x-1,x+1,nums[x]))
+        {
+          dp[x] = true;
+          System.out.print((x+1) + " " );
+        }
+      }
+    }
+    catch(IOException e)
+    {
+
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  String next () throws IOException
+  {
+    while (as == null || !as.hasMoreTokens ())
+    {
+      as = new StringTokenizer (in.readLine ().trim ());
+    }
+    
+    
+    return as.nextToken ();
+  }
+  
+  
+  
+  long nextLong () throws IOException
+  {
+    return Long.parseLong (next ());
+  }
+  
+  
+  int nextInt () throws IOException
+  {
+    return Integer.parseInt (next ());
+  }
+  
+  
+  double nextDouble () throws IOException
+  {
+    return Double.parseDouble (next ());
+  }
+  
+  
+  String nextLine () throws IOException
+  {
+    return in.readLine ().trim ();
+  }
+}
